@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ynonbenguy/jb-nodejs-course/issues"
   },
-  "homepage": "https://github.com/ynonbenguy/jb-nodejs-course#readme"
+  "homepage": "https://github.com/ynonbenguy/jb-nodejs-course#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
