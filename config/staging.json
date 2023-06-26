@@ -1,0 +1,22 @@
+{
+    "app": {
+        "port": 3000,
+        "host": "localhost"
+    },
+    "github": {
+        "cleintId": "",
+        "secret": ""
+    },
+    "mysql":{
+        "host": "",
+        "user": "",
+        "password": "",
+        "database": "",
+        "port": ""
+    },
+    "mongo": {
+        "host": "",
+        "port": "",
+        "db": ""
+    }
+}
