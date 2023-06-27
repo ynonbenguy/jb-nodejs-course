@@ -8,11 +8,11 @@
         "secret": ""
     },
     "mysql":{
-        "host": "",
-        "user": "",
-        "password": "",
-        "database": "",
-        "port": ""
+        "host": "localhost",
+        "user": "username",
+        "password": "password",
+        "database": "mydb",
+        "port": 3306
     },
     "mongo": {
         "host": "",
