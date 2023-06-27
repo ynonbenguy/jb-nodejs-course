@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require("../middlewares/passport");
 
 const router = express.Router();
 
@@ -9,7 +10,9 @@ const authenticate = (req, res, next) => {
 const callback = (req, res, next) => {
   res.send("ok");
 };
-router.get("/", authenticate);
-router.get("/callbaack", callback);
+
+router.get("/", passport.authenticate('github',{scope: 'user:email'}));
+router.get('/callback', 
+passport.authenticate('github', { successRedirect: '/dashboard', failureRedirect: '/welcome' }));
 
 module.exports = router;

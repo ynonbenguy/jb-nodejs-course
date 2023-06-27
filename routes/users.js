@@ -10,6 +10,7 @@ const dashboard = (req, res, next) => {
 };
 
 const logout = (req, res, next) => {
+  delete req.user;
   res.redirect("/welcome");
 };
 
