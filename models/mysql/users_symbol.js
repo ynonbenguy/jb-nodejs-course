@@ -11,7 +11,7 @@ class user_symbols {
 
     async findByUserID ({userID}) {
         return this.db.execute(`
-        select from users_symbols, where user_id    = ?`, [userID]);
+        select * from users_symbols where user_id = ?`, [userID]);
     };
      
 }

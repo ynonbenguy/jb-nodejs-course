@@ -10,12 +10,12 @@ class user {
 
     async findByGithubid ({gitHubID}) {
         return this.db.execute(`
-        select from users, where github_id=?`, [gitHubID]);
+        select * from users where github_id=?`, [gitHubID]);
     };
      
     async findByPK ({ID}) {
         return this.db.execute(`
-        select from users, where id=?`, [ID]);
+        select * from users where id=?`, [ID]);
     };
      
 }
