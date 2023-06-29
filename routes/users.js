@@ -1,12 +1,33 @@
 const express = require("express");
 const validator = require("../middlewares/validator");
 const validateSymbol = require("../controllers/users/users.validators");
-const mysqlDB = require("../middlewares/mysql");
+const {middleware: mysqlDB} = require("../middlewares/mysql");
 const user_symbols = require("../models/mysql/users_symbol");
+const enforecUser = require('../middlewares/enforce-auth');
+const SymbolValue = require("../models/mongo/symbol-value");
+
 const router = express.Router();
 
-const dashboard = (req, res, next) => {
-  res.send("dashboard");
+const dashboard = async (req, res, next) => {
+    try {
+        const userSymbol = new user_symbols(req.db);
+        const userSymbols = await userSymbol.findByUserID({
+            //userID: req.user.id
+            userID: '123'
+        });
+
+        const promises = [];
+        //userSymbols.forEach((userSymbol) => promises.push(SymbolValue.findOne({symbol: userSymbol.symbol}).sort({createdAt : -1}).limit(1)))
+        //const symbolValues = await Promise.all(promises);
+        const symbolValues = [1,2,3,4];
+        res.render('dashboard', {
+            userSymbols,
+            symbolValues,
+        })
+    } catch (err) {
+        next(err);
+    }
+
 };
 
 const logout = (req, res, next) => {
@@ -15,7 +36,7 @@ const logout = (req, res, next) => {
 };
 
 const addSymbol = (req, res, next) => {
-  const userSymbol = new user_symbols(req.db);
+  const userSymbol =  new user_symbols(req.db);
   userSymbol.add({
       userID: 123,
       symbol: req.body.symbol
@@ -23,8 +44,8 @@ const addSymbol = (req, res, next) => {
   res.send(`added symbol: ${req.body.symbol}`);
 };
 
-router.get("/dashboard", dashboard);
-router.get("/logout", logout);
+router.get("/dashboard",enforecUser, mysqlDB,dashboard);
+router.get("/logout",enforecUser, logout);
 router.post("/symbol", validator(validateSymbol), mysqlDB, addSymbol);
 
 module.exports = router;

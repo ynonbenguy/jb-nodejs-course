@@ -17,7 +17,15 @@ const pool = mysql.createPool({
 pool.query = util.promisify(pool.query);
 pool.execute = util.promisify(pool.execute);
 
-module.exports  = async (req,res,next) => {
-    req.db = pool;
-    return next();
+// module.exports  = async (req,res,next) => {
+//     req.db = pool;
+//     return next();
+// }
+
+module.exports = {
+    middleware: async (req,res,next) => {
+        req.db = pool;
+        return next();
+    },
+    db: pool,
 }

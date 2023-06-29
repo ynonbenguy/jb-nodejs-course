@@ -5,15 +5,32 @@ const guestRouter = require('./routes/guests');
 const githubRouter = require('./routes/github');
 const notFound = require('./middlewares/404');
 const error = require('./middlewares/error');
-const passport = require('passport');
+const auth = require('passport');
+const session = require("express-session");
+const path = require("path");
 
 const port = config.get('app.port');
 const host = config.get('app.host');
 
+
+
 const app = express();
 
-app.use(passport.session());
-app.use(passport.initialize());
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use(session({
+    // store: sessionStore,
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 365 * 5,
+    },
+  }));
+
+app.use(auth.session());
+app.use(auth.initialize());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 

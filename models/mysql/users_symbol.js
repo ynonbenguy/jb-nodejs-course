@@ -13,6 +13,11 @@ class user_symbols {
         return this.db.execute(`
         select * from users_symbols where user_id = ?`, [userID]);
     };
+
+    async getSymbols() {
+        return this.db.execute(`
+        select distinct(symbol) from users_symbols`);
+    }
      
 }
 
