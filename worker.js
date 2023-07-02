@@ -5,8 +5,8 @@ const SymbolValue = require("./models/mongo/symbol-value");
 const config = require("config");
 const mysql = require('mysql2');
 const util = require("util");
-
-
+const { io } = require("socket.io-client");
+const socket = io(`http://${config.get('worker.app.host')}:${config.get('worker.app.port')}`);
 
 const scrape = async (symbol) => {
     try {
@@ -19,6 +19,10 @@ const scrape = async (symbol) => {
             value,
           });
         await symbolValue.save();
+        await socket.emit('updating values', {
+            symbol: symbolValue.symbol,
+            value: value,
+        })
     } catch (error) {
         console.log(error);
     }
@@ -49,7 +53,7 @@ const loop = async () => {
 }
 (async () => {
     try {
-        mongoose.connect("mongodb://localhost:27017/mymongo");
+        await mongoose.connect(`mongodb://${config.get("mongo.host")}:${config.get("mongo.port")}/${config.get("mongo.db")}`);
         loop();
     } catch (err) {
         console.log(err);

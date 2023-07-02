@@ -12,14 +12,13 @@ const dashboard = async (req, res, next) => {
     try {
         const userSymbol = new user_symbols(req.db);
         const userSymbols = await userSymbol.findByUserID({
-            //userID: req.user.id
-            userID: '123'
+            userID: req.user.id
+            //userID: '123'
         });
 
         const promises = [];
-        //userSymbols.forEach((userSymbol) => promises.push(SymbolValue.findOne({symbol: userSymbol.symbol}).sort({createdAt : -1}).limit(1)))
-        //const symbolValues = await Promise.all(promises);
-        const symbolValues = [1,2,3,4];
+        userSymbols.forEach((userSymbol) => promises.push(SymbolValue.findOne({symbol: userSymbol.symbol}).sort({createdAt : -1}).limit(1)))
+        const symbolValues = await Promise.all(promises);
         res.render('dashboard', {
             userSymbols,
             symbolValues,
@@ -31,6 +30,12 @@ const dashboard = async (req, res, next) => {
 };
 
 const logout = (req, res, next) => {
+    req.logout((error) => {
+        if (error) {
+            return next(error)
+        } 
+        return res.redirect("/welcome")
+    })
   delete req.user;
   res.redirect("/welcome");
 };

@@ -12,9 +12,10 @@ const path = require("path");
 const port = config.get('app.port');
 const host = config.get('app.host');
 
-
-
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const {Server} = require("socket.io");
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -29,6 +30,7 @@ app.use(session({
     },
   }));
 
+await mongoose.connect(`mongodb://${config.get("mongo.host")}:${config.get("mongo.port")}/${config.get("mongo.db")}`);
 app.use(auth.session());
 app.use(auth.initialize());
 app.use(express.json());
@@ -38,10 +40,17 @@ app.use('/',usersRouter);
 app.use('/',guestRouter);
 app.use('/github',githubRouter);
 
+io.on("connection", (socket) => {
+  console.log("a user has been connected");
+  socket.on("updating values", (msg) => {
+    io.emit('update from express', msg)
+  })
+})
+
 app.use(notFound);
 app.use(error);
 
-app.listen(port, host, () => {
+server.listen(port, host, () => {
     console.log(`Example app listening on port ${port}`)
 })
   

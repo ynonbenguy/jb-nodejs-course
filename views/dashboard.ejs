@@ -1,3 +1,10 @@
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"> </script>
+<script>
+    var socket = io();
+    socket.on('update from express', (msg) => {
+        updateSymbolValue(msg.symbol, msg.value);
+    })
+</script>
 <form method="POST" action="/symbol">
     <input name="symbol" placeholder="new symbol?">
     <input type="submit" value="add">
@@ -16,3 +23,11 @@
 
     <% }) %>
 </table>
+
+<script>
+    const updateSymbolValue = (symbol, value) => {
+        document.getElementById(`${symbol}-value`).innerHTML = value; 
+    } 
+</script>
+
+<a class="button" href= "/logout">Logout</button>
